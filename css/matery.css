@@ -241,7 +241,8 @@ mark {
 }
 
 .bg-color {
-    background-image: linear-gradient(to right, #e9e9f1 0%, #ced4f1 100%);
+    background-image: linear-gradient(to right, #31f809 0%, #1235e4 100%);
+    opacity:0.8
 }
 
 .text-color {
@@ -281,7 +282,7 @@ nav {
 
 header .nav-transparent {
     background-color: transparent !important;
-    background-image: none;
+    background-image: linear-gradient(rgba(17, 243, 103, 0.5), rgba(16, 39, 247, 0.5));
     box-shadow: none;
 }
 
