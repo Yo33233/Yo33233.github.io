@@ -14,7 +14,7 @@
 <meta property="og:description" content="学习笔记">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-12-15T06:27:29.000Z">
-<meta property="article:modified_time" content="2022-12-15T06:49:10.270Z">
+<meta property="article:modified_time" content="2022-12-15T07:03:43.975Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -95,129 +95,21 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>#根组件<br>我们传入createApp的对象实际上是一个组件，每个应用都需要一个“根组件”，其他组件将作为其子组件。vue使用一种基于HTML的模板语法，使我们能够声明式地将其组件实例的数据绑定到呈现的DOM上。<br>在Vue模板内，JS表达式可以被使用在如下场景中：1，在文本插值中<br>2，在任何Vue指令attribute的值中。每个绑定仅支持单一表达式，也就是一段能够被求值的JS代码。<span id="more"></span><br><strong><strong>指令是带有v-前缀的特殊attribute。其期望的值为一个JS表达式(是否可以被return)。一个指令的任务是在其表达式的值变化时响应式地更新DOM。</strong></strong><br>某些指令需要一个参数(Arguments),在指令名后通过一个冒号隔开做标识。在指令参数上也可以使用一个JS表达式[动态参数]，需要包含在一对方括号内。还可以将一个函数绑定到动态的事件名称上：<br>&lt;a v-on:[eventName]&#x3D;”dosomething”&gt;…</a>当eventName的值是”focus”时，v-on:[eventName]等价于v-on:focus.<br>需要传入复杂的动态参数时，推荐使用计算属性替换复杂的表达式。<br>一个完整的指令语法：【v-on:submit.prevent&#x3D;”onSubmit”】</p>
-<script setup>中的顶层的导入和变量声明可在同一组件的模板中直接使用。可以理解为模板中的表达式和<script setup>中的代码处在同一个作用域中。
-响应式对象其实是JS Proxy，其行为表现与一般对象相似，不同之处在于Vue能够跟踪对响应式对象属性的访问与更改操作。仅当ref是模板渲染上下文的顶层属性时才适用自动解包。
-ref的.value属性也是响应式的。同时，当值为对象类型时，会用reactive()自动转换它的.value。一个ref被嵌套在一个深层响应式对象中，作为属性被访问或更改时，它会自动解包。但当其作为响应式数组或像Map这种原生集合类型的元素被访问时，不会进行解包。
-使用计算属性来描述响应式状态的复杂的逻辑.计算属性值会基于其响应式依赖被缓存，并且会自动追踪响应式依赖。computed()方法期望接受一个getter函数，返回值为一个计算属性ref。计算属性的返回值应该被视为只读的，并且永远不会被更改——应该更新它所依赖的原状态以触发新的计算。
-#v-if与v-show的对比
-使用v-for指令基于一个数组来渲染一个列表,也可以来遍历一个对象的所有属性。
-在template元素上可以使用v-for和v-if
-在计算属性中使用reverse()和sort()将变更原始数组，计算函数中不应该这么做，应该在调用这些方法之前创建一个原数组的副本。
-除了直接绑定方法名，还可以在内联事件处理器中调用方法，这允许我们向方法传入自定义参数以代替原生事件。
-事件修饰符使得事件处理器可以更专注于数据逻辑而不用去处理DOM事件的细节。使用修饰符需要注意调用顺序，因为相关代码是以相同的顺序生成的。
-事件首先向上冒泡，等到达最顶端所有事件处理程序中都执行完毕后，再根据冒泡过程中是否有event.preventDefault()调用来决定是否执行浏览器默认行为。
-#事件的默认行为
-表单中的控件元素无论在表单中有多深，都可以通过form.elements获取到，也就是说，form.elements导航属性并不依赖于标签的结构。
-对于任何控件元素，其对应的表单都可以通过element.form访问到，因此，表单引用了所有元素，元素也引用了表单。
-#表单控件
-document.forms(document.forms[name/index])
-form.elements[name/index]/form[name/index]访问表单内的控件元素
-elements属性也适用于<fieldset>子表单元素。
-element.form:控件元素通过form属性来引用他们所属的表单
-在组合式API中，可以使用watch函数在每次响应式状态发生变化时触发回调函数。watch的第一个参数可以是不同形式的"数据源":它可以是一个ref(包括计算属性),一个响应式对象，一个getter函数，或多个数据源组成的数组。
-#深层侦听器
-直接给watch()传入一个响应式对象，会隐式地创建一个深层侦听器——该回调函数在所有嵌套的变更时都会被触发。watchEffect函数会立即执行一遍回调函数，如果这是函数产生了副作用，Vue会自动追踪副作用的依赖关系，自动分析出响应源。
-ref是一个特殊的attribute，它允许我们在一个特定的DOM元素或子组件实例被挂载后，获得对它的直接引用。在组件挂载时将焦点设置到一个input元素上，或在一个元素上初始化一个第三方库。
-只可以在组件挂载后才能访问模板引用，若想在模板中的表达式上访问模板引用，在初次渲染时会是null，这是因为在初次渲染前这个元素还不存在。
-声明了一个组件可能触发的所有事件，还可以对事件的参数进行验证。同时，这还可以让 Vue 避免将它们作为原生事件监听器隐式地应用于子组件的根元素。
-watchEffect(()=>{
-  if(input.value){
-    input.value.focus()
-  }else{
-    // 初始化侦听器时，组件还未挂载。或者通过v-if控制，此元素被卸载。
-  }
-})
-当有alert或者元素被从DOM中移除，就会导致元素焦点丢失。HTML特性tabindex允许在任何元素上聚焦。tabindex="0"会使该元素与那些不具有tabindex的元素放在一起。它用于使元素具有焦点，但是保留默认的切换顺序。
-子组件可以通过调用内置的$emit方法，通过传入事件名称来抛出一个事件。
-#动态组件
+        <p>#根组件<br>我们传入createApp的对象实际上是一个组件，每个应用都需要一个“根组件”，其他组件将作为其子组件。vue使用一种基于HTML的模板语法，使我们能够声明式地将其组件实例的数据绑定到呈现的DOM上。<br>在Vue模板内，JS表达式可以被使用在如下场景中：1，在文本插值中<br>2，在任何Vue指令attribute的值中。每个绑定仅支持单一表达式，也就是一段能够被求值的JS代码。<span id="more"></span><br><strong><strong>指令是带有v-前缀的特殊attribute。其期望的值为一个JS表达式(是否可以被return)。一个指令的任务是在其表达式的值变化时响应式地更新DOM。</strong></strong><br>某些指令需要一个参数(Arguments),在指令名后通过一个冒号隔开做标识。在指令参数上也可以使用一个JS表达式[动态参数]，需要包含在一对方括号内。还可以将一个函数绑定到动态的事件名称上：<br>&lt;a v-on:[eventName]&#x3D;”dosomething”&gt;…</a>当eventName的值是”focus”时，v-on:[eventName]等价于v-on:focus.<br>需要传入复杂的动态参数时，推荐使用计算属性替换复杂的表达式。<br>一个完整的指令语法：【v-on:submit.prevent&#x3D;”onSubmit”】<br>“<script setup>"中的顶层的导入和变量声明可在同一组件的模板中直接使用。可以理解为模板中的表达式和<script setup>中的代码处在同一个作用域中。<br>响应式对象其实是JS Proxy，其行为表现与一般对象相似，不同之处在于Vue能够跟踪对响应式对象属性的访问与更改操作。仅当ref是模板渲染上下文的顶层属性时才适用自动解包。<br>ref的.value属性也是响应式的。同时，当值为对象类型时，会用reactive()自动转换它的.value。一个ref被嵌套在一个深层响应式对象中，作为属性被访问或更改时，它会自动解包。但当其作为响应式数组或像Map这种原生集合类型的元素被访问时，不会进行解包。<br>使用计算属性来描述响应式状态的复杂的逻辑.计算属性值会基于其响应式依赖被缓存，并且会自动追踪响应式依赖。computed()方法期望接受一个getter函数，返回值为一个计算属性ref。计算属性的返回值应该被视为只读的，并且永远不会被更改——应该更新它所依赖的原状态以触发新的计算。<br>#v-if与v-show的对比<br>使用v-for指令基于一个数组来渲染一个列表,也可以来遍历一个对象的所有属性。<br>在template元素上可以使用v-for和v-if<br>在计算属性中使用reverse()和sort()将变更原始数组，计算函数中不应该这么做，应该在调用这些方法之前创建一个原数组的副本。<br>除了直接绑定方法名，还可以在内联事件处理器中调用方法，这允许我们向方法传入自定义参数以代替原生事件。<br>事件修饰符使得事件处理器可以更专注于数据逻辑而不用去处理DOM事件的细节。使用修饰符需要注意调用顺序，因为相关代码是以相同的顺序生成的。<br>事件首先向上冒泡，等到达最顶端所有事件处理程序中都执行完毕后，再根据冒泡过程中是否有event.preventDefault()调用来决定是否执行浏览器默认行为。<br>#事件的默认行为<br>表单中的控件元素无论在表单中有多深，都可以通过form.elements获取到，也就是说，form.elements导航属性并不依赖于标签的结构。<br>对于任何控件元素，其对应的表单都可以通过element.form访问到，因此，表单引用了所有元素，元素也引用了表单。<br>#表单控件<br>document.forms(document.forms[name/index])<br>form.elements[name/index]/form[name/index]访问表单内的控件元素<br>elements属性也适用于<fieldset>子表单元素。<br>element.form:控件元素通过form属性来引用他们所属的表单<br>在组合式API中，可以使用watch函数在每次响应式状态发生变化时触发回调函数。watch的第一个参数可以是不同形式的"数据源":它可以是一个ref(包括计算属性),一个响应式对象，一个getter函数，或多个数据源组成的数组。<br>#深层侦听器<br>直接给watch()传入一个响应式对象，会隐式地创建一个深层侦听器——该回调函数在所有嵌套的变更时都会被触发。watchEffect函数会立即执行一遍回调函数，如果这是函数产生了副作用，Vue会自动追踪副作用的依赖关系，自动分析出响应源。<br>ref是一个特殊的attribute，它允许我们在一个特定的DOM元素或子组件实例被挂载后，获得对它的直接引用。在组件挂载时将焦点设置到一个input元素上，或在一个元素上初始化一个第三方库。<br>只可以在组件挂载后才能访问模板引用，若想在模板中的表达式上访问模板引用，在初次渲染时会是null，这是因为在初次渲染前这个元素还不存在。<br>声明了一个组件可能触发的所有事件，还可以对事件的参数进行验证。同时，这还可以让 Vue 避免将它们作为原生事件监听器隐式地应用于子组件的根元素。<br>watchEffect(()=>{<br>  if(input.value){<br>    input.value.focus()<br>  }else{<br>    // 初始化侦听器时，组件还未挂载。或者通过v-if控制，此元素被卸载。<br>  }<br>})<br>当有alert或者元素被从DOM中移除，就会导致元素焦点丢失。HTML特性tabindex允许在任何元素上聚焦。tabindex="0"会使该元素与那些不具有tabindex的元素放在一起。它用于使元素具有焦点，但是保留默认的切换顺序。<br>子组件可以通过调用内置的$emit方法，通过传入事件名称来抛出一个事件。<br>#动态组件</p>
 <div :class="{active:isActive}"></div>
 当使用<component :is="..."></component>来在多个组件做切换时，被切换掉的组件会被卸载。被传给:is的值可以是以下几种：
 1，被注册的组件名 2，导入的组件对象
 
-有一个根组件（App.vue），在main.js文件中导入根组件，并将其作为参数调用函数createApp，然后调用函数mount
-将createApp函数返回结果挂载到index.html中的容器上。最后把main.js文件作为模块导入index.html文件中。
-camelCase PascalCase kebab-case
-一个客户端路由器的职责就是利用诸如History API或是hashchange事件这样的浏览器API来管理应用当前应该渲染的视图。
-#Prop逐级透传问题 provide inject
-建议尽可能将任何对响应式对象状态的变更都保持在供给方组件中
-当对象或数组作为props被传入时，虽然子组件无法更改props绑定，但仍然可以更改对象或数组内部的值。
-#props校验
-组件触发的时间没有冒泡机制，只能监听直接子组件触发的事件，平级组件或是跨越多层嵌套的组件间通信，应使用一个外部的事件总线，或是使用一个全局状态管理方案。
-为事件添加校验，那么事件可以被赋值为一个函数，接收的参数就是抛出事件时传入emit的内容，返回一个布尔值来表明事件是否合法。
-#默认情况下，v-model在组件上都是使用modelValue作为prop，并以update：modelValue作为对应的事件。可以在一个组件上创建多个v-model双向绑定，每一个v-model都会同步不同的prop。
-#在自定义组件中使v-model支持自定义的修饰符。
-组件的v-model上所添加的修饰符，可以通过modelModifiers PROP在组件内访问到。有了modelMotifiers PROP，我们就可以在原生事件侦听函数中检查他的值，然后决定触发的自定义事件中要向父组件传递什么值。
-#透传attribute 传递给一个组件，却没有被该组件声明为props或emits的attribute或v-on事件监听器
-有着多个根节点的组件没有自动 attribute 透传行为。如果 $attrs 没有被显式绑定，将会抛出一个运行时警告。
-useFetch()现在同时可以接受静态的URL字符串和URL字符串的ref,当通过isRef()检测到URL是一个动态的ref时，会使用watcheffect()启动一个响应式的effect.该effect会立刻执行一次，并在此过程中将URL的ref作为依赖进行跟踪，当URL的ref发生改变时，数据就会被重置，并重新发送请求、
-
-
-1,watchEffect将参数指向的函数存到一个全局变量，并执行。
-2，执行的过程中(函数能执行到的地方)，调用依赖类方法depend，将全局变量中存储的函数（订阅者）
-存储到类实例变量subscribers中。
-3，调用依赖notify方法(setter中)，调用subscribers中存储的函数
-
-当ok.value变为false，msg.value不再是一个依赖项，应该能够将回调函数从
-msg对象的subscribers列表中实时删除
-#带参数的动态路由匹配
-当用户从/users/johnny导航到/users/james时，相同的组件将被重复使用，比起销毁再创建，
-复用更加高效，这也意味着组件的生命周期函数钩子不会被调用。
-要对同一个组件中参数的变化做出响应的话，可以watch route对象上的任意属性或者
-使用beforeRouteUpdate导航守卫。
-为动态路由参数指定一个自定义的正则表达式，使得可以根据URL的参数内容来区分不同的路由
-修饰符u表示启用正则表达式中对Unicode的支持，以及4个字节长的字符被以正确的方式
-处理
-# 锚点：字符串开始^ 和末尾$
-多行模式下的测试^匹配所有以换行符\n开头的位置以及在文本开头的位置
-# 锚点^$的多行模式，修饰符“m”
-# 词边界
-1，在字符串的开头，如果第一个字符是单词字符\w
-2,在字符串中的两个字符之间，其中一个是单词字符\w，另一个不是。
-3，在字符串末尾，如果最后一个字符是单词字符\w
-# 转义
-1，要在字面意义上搜索正则表达式中的特殊字符，我们需要在它们前面加上一个反斜杠\
-2，如果在/.../内（但不在new RegExp）,我们还需要转义 /。
-3，当将字符串传递给new RegExp时，需要双反斜杠，因为字符串引号会消耗一个反斜杠。
-# 嵌套路由
-一个在顶层router-view中被渲染的组件也可以包含自己嵌套的<router-view>.
-有时候想同时展示多个视图，而不是嵌套展示，例如创建一个布局，则在界面
-中需要存在多个单独命名的视图，一个视图使用一个组件渲染，因此对于同个路由，
-多个视图就需要多个组件。使用components配置
-```javascript```
-const routes=[
-  path:'/user/:id',
-  component:User,
-  children:[
-    {
-      //当/user/:id/profile匹配时,UserProfile将被渲染到User的<router-view>
-      //按照当前配置，当访问/user/eduardo时,在User的router-view里面什么都不
-      //不会呈现，因为没有匹配到嵌套路由。在这种情况下，可以提供一个空的嵌套路径。
-      path:'profile',
-      component:UserProfile
-    }
-  ]
-]
-
-const routes_1={
-  path:'/settings',
-  component:Usersettings,
-  children:[{
-    path:'emails',
-    component:UserEmailsSubscriptions
-  },
-  {
-    path:'profile',
-    components:{
-      default:UserProfile,
-      helper:UserProfilePreview
-    }
-  }]
-}
-嵌套路由->命名视图（同级展示多个视图）->嵌套路由同级展示多个视图
-```
-# 重定向和别名
-
+<p>有一个根组件（App.vue），在main.js文件中导入根组件，并将其作为参数调用函数createApp，然后调用函数mount<br>将createApp函数返回结果挂载到index.html中的容器上。最后把main.js文件作为模块导入index.html文件中。<br>camelCase PascalCase kebab-case<br>一个客户端路由器的职责就是利用诸如History API或是hashchange事件这样的浏览器API来管理应用当前应该渲染的视图。<br>#Prop逐级透传问题 provide inject<br>建议尽可能将任何对响应式对象状态的变更都保持在供给方组件中<br>当对象或数组作为props被传入时，虽然子组件无法更改props绑定，但仍然可以更改对象或数组内部的值。<br>#props校验<br>组件触发的时间没有冒泡机制，只能监听直接子组件触发的事件，平级组件或是跨越多层嵌套的组件间通信，应使用一个外部的事件总线，或是使用一个全局状态管理方案。<br>为事件添加校验，那么事件可以被赋值为一个函数，接收的参数就是抛出事件时传入emit的内容，返回一个布尔值来表明事件是否合法。<br>#默认情况下，v-model在组件上都是使用modelValue作为prop，并以update：modelValue作为对应的事件。可以在一个组件上创建多个v-model双向绑定，每一个v-model都会同步不同的prop。<br>#在自定义组件中使v-model支持自定义的修饰符。<br>组件的v-model上所添加的修饰符，可以通过modelModifiers PROP在组件内访问到。有了modelMotifiers PROP，我们就可以在原生事件侦听函数中检查他的值，然后决定触发的自定义事件中要向父组件传递什么值。<br>#透传attribute 传递给一个组件，却没有被该组件声明为props或emits的attribute或v-on事件监听器<br>有着多个根节点的组件没有自动 attribute 透传行为。如果 $attrs 没有被显式绑定，将会抛出一个运行时警告。<br>useFetch()现在同时可以接受静态的URL字符串和URL字符串的ref,当通过isRef()检测到URL是一个动态的ref时，会使用watcheffect()启动一个响应式的effect.该effect会立刻执行一次，并在此过程中将URL的ref作为依赖进行跟踪，当URL的ref发生改变时，数据就会被重置，并重新发送请求、</p>
+<p>1,watchEffect将参数指向的函数存到一个全局变量，并执行。<br>2，执行的过程中(函数能执行到的地方)，调用依赖类方法depend，将全局变量中存储的函数（订阅者）<br>存储到类实例变量subscribers中。<br>3，调用依赖notify方法(setter中)，调用subscribers中存储的函数</p>
+<p>当ok.value变为false，msg.value不再是一个依赖项，应该能够将回调函数从<br>msg对象的subscribers列表中实时删除<br>#带参数的动态路由匹配<br>当用户从/users/johnny导航到/users/james时，相同的组件将被重复使用，比起销毁再创建，<br>复用更加高效，这也意味着组件的生命周期函数钩子不会被调用。<br>要对同一个组件中参数的变化做出响应的话，可以watch route对象上的任意属性或者<br>使用beforeRouteUpdate导航守卫。<br>为动态路由参数指定一个自定义的正则表达式，使得可以根据URL的参数内容来区分不同的路由<br>修饰符u表示启用正则表达式中对Unicode的支持，以及4个字节长的字符被以正确的方式<br>处理</p>
+<h1 id="锚点：字符串开始-和末尾"><a href="#锚点：字符串开始-和末尾" class="headerlink" title="锚点：字符串开始^ 和末尾$"></a>锚点：字符串开始^ 和末尾$</h1><p>多行模式下的测试^匹配所有以换行符\n开头的位置以及在文本开头的位置</p>
+<h1 id="锚点-的多行模式，修饰符“m”"><a href="#锚点-的多行模式，修饰符“m”" class="headerlink" title="锚点^$的多行模式，修饰符“m”"></a>锚点^$的多行模式，修饰符“m”</h1><h1 id="词边界"><a href="#词边界" class="headerlink" title="词边界"></a>词边界</h1><p>1，在字符串的开头，如果第一个字符是单词字符\w<br>2,在字符串中的两个字符之间，其中一个是单词字符\w，另一个不是。<br>3，在字符串末尾，如果最后一个字符是单词字符\w</p>
+<h1 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h1><p>1，要在字面意义上搜索正则表达式中的特殊字符，我们需要在它们前面加上一个反斜杠<br>2，如果在/.../内（但不在new RegExp）,我们还需要转义 /。<br>3，当将字符串传递给new RegExp时，需要双反斜杠，因为字符串引号会消耗一个反斜杠。</p>
+<h1 id="嵌套路由"><a href="#嵌套路由" class="headerlink" title="嵌套路由"></a>嵌套路由</h1><p>一个在顶层router-view中被渲染的组件也可以包含自己嵌套的<router-view>.<br>有时候想同时展示多个视图，而不是嵌套展示，例如创建一个布局，则在界面<br>中需要存在多个单独命名的视图，一个视图使用一个组件渲染，因此对于同个路由，<br>多个视图就需要多个组件。使用components配置<br><code>javascript</code><br>const routes=[<br>  path:'/user/:id',<br>  component:User,<br>  children:[<br>    {<br>      //当/user/:id/profile匹配时,UserProfile将被渲染到User的<router-view><br>      //按照当前配置，当访问/user/eduardo时,在User的router-view里面什么都不<br>      //不会呈现，因为没有匹配到嵌套路由。在这种情况下，可以提供一个空的嵌套路径。<br>      path:'profile',<br>      component:UserProfile<br>    }<br>  ]<br>]</p>
+<p>const routes_1={<br>  path:'/settings',<br>  component:Usersettings,<br>  children:[{<br>    path:'emails',<br>    component:UserEmailsSubscriptions<br>  },<br>  {<br>    path:'profile',<br>    components:{<br>      default:UserProfile,<br>      helper:UserProfilePreview<br>    }<br>  }]<br>}<br>嵌套路由->命名视图（同级展示多个视图）->嵌套路由同级展示多个视图</p>
+<pre><code># 重定向和别名
+</code></pre>
 
       
     </div>
